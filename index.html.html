@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Em, Bình Yên Của Anh ❤️</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    <style>
+        /* --- RESET & BASIC --- */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Playfair Display', serif;
+            color: #fff;
+            background-color: #050505;
+        }
+
+        /* --- MÀN HÌNH CHỜ (START SCREEN) --- */
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a0510 0%, #000000 100%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease, visibility 1.5s;
+        }
+
+        .start-btn {
+            padding: 15px 50px;
+            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(45deg, #ff4b72, #ff9a9e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 75, 114, 0.4);
+            transition: all 0.4s ease;
+            animation: pulseBtn 2s infinite;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 75, 114, 0.8);
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulseBtn {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 75, 114, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 75, 114, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 75, 114, 0);
+            }
+        }
+
+        /* --- TRÌNH CHIẾU ẢNH NỀN RÕ NÉT --- */
+        #bg-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -3;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            /* ĐÃ BỎ HIỆU ỨNG BLUR (LÀM MỜ) TẠI ĐÂY */
+            filter: brightness(0.85);
+            /* Chỉ giảm độ sáng một xíu để chữ dễ đọc */
+            transition: opacity 4s ease-in-out;
+        }
+
+        /* Lớp phủ tối nhẹ ở các góc màn hình */
+        .overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -2;
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+
+        /* --- ĐOM ĐÓM BAY LẢ TẢ --- */
+        .firefly {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #ffeba1;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px #ffeba1, 0 0 20px 2px #ffc107;
+            animation: fireflyFloat linear infinite;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        @keyframes fireflyFloat {
+            0% {
+                transform: translateY(110vh) scale(0.5);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.8;
+            }
+
+            80% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* --- KHUNG CHỮ (GLASSMORPHISM) --- */
+        .main-content {
+            display: none;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .container {
+            text-align: center;
+            padding: 50px 70px;
+            background: rgba(15, 0, 5, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(255, 182, 193, 0.1);
+            border: 1px solid rgba(255, 192, 203, 0.15);
+            max-width: 80%;
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5.5rem;
+            color: #ffb6c1;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 1), 0 0 20px rgba(255, 105, 180, 0.6);
+            /* Đổ bóng mạnh hơn để nổi trên ảnh rõ */
+            margin-bottom: 25px;
+            margin-top: 0;
+            opacity: 0;
+        }
+
+        p.message {
+            font-size: 1.6rem;
+            line-height: 2;
+            color: #fcfcfc;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
+            /* Viền đen cho chữ nổi bật */
+            opacity: 0;
+            margin: 18px 0;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- ẢNH POLAROID BAY --- */
+        .floating-element {
+            position: absolute;
+            bottom: -250px;
+            opacity: 0;
+            animation: floatUp linear infinite;
+            z-index: 5;
+        }
+
+        .floating-photo {
+            width: 150px;
+            padding: 12px 12px 40px 12px;
+            background: #fdfdfd;
+            box-shadow: 5px 15px 30px rgba(0, 0, 0, 0.7);
+            border-radius: 3px;
+            position: relative;
+            pointer-events: auto;
+            transition: transform 0.3s;
+        }
+
+        .floating-photo:hover {
+            transform: scale(1.1) !important;
+            z-index: 20;
+        }
+
+        .floating-photo::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-4deg);
+            width: 70px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .floating-photo img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border: 1px solid #e0e0e0;
+            filter: contrast(1.05) saturate(1.1);
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #555;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(var(--rotation)) scale(var(--scale));
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-110vh) rotate(var(--rotation-end)) scale(var(--scale));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="nhac-nen.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="start-screen">
+        <h2
+            style="font-family: 'Great Vibes', cursive; font-size: 4rem; color: #ffb6c1; margin-bottom: 40px; text-shadow: 0 0 10px rgba(255,105,180,0.5);">
+            Anh có điều muốn nói...</h2>
+        <button class="start-btn" onclick="startSurprise()">Lắng nghe anh nhé ❤️</button>
+    </div>
+
+    <div id="bg-container"></div>
+    <div class="overlay"></div>
+
+    <div class="main-content" id="main-content">
+        <div class="container">
+            <h1 id="title">Chúc Mừng Sinh Nhật Em ❤️</h1>
+            <p class="message" id="line1">Cảm ơn em vì giữa thế gian rộng lớn, đã chọn dừng chân và ở lại bên anh...</p>
+            <p class="message" id="line2">Chúc mừng sinh nhật bình yên của anh. Tuổi mới, mong em cất đi những muộn
+                phiền,</p>
+            <p class="message" id="line3">giữ lại nụ cười và luôn an yên trong tâm hồn.</p>
+            <p class="message" id="line4">Dù thế giới ngoài kia có giông bão thế nào, hãy nhớ luôn có anh ở đây, che chở
+                cho em.</p>
+            <p class="message" id="line5"
+                style="font-family: 'Dancing Script', cursive; font-weight: 700; color: #ffb6c1; font-size: 2.8rem; margin-top: 35px; text-shadow: 2px 2px 5px rgba(0,0,0,1), 0 0 15px rgba(255,105,180,0.8);">
+                Thương em, mãi về sau! ❤️</p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. CẤU HÌNH ẢNH (BẮT BUỘC PHẢI CÓ FILE ẢNH TRONG THƯ MỤC)
+        // ==========================================
+         const bgImages = [
+
+                'anh1.jpg',
+
+                'anh2.jpg',
+
+                'anh3.jpg'
+
+            ];
+
+
+
+            const memoryPhotos = [
+
+                'anh1.jpg',
+
+                'anh2.jpg',
+
+                'anh3.jpg',
+
+                'anh4.jpg',
+
+                'anh5.jpg',
+
+                'anh6.jpg'
+
+            ];
+
+        // ==========================================
+        // 2. LOGIC HIỆU ỨNG
+        // ==========================================
+        const bgContainer = document.getElementById('bg-container');
+        let currentBgIndex = 0;
+
+        function changeBackground() {
+            if (bgImages.length === 0) return;
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.style.backgroundImage = `url('${bgImages[currentBgIndex]}')`;
+            bgContainer.appendChild(slide);
+            void slide.offsetWidth;
+            slide.style.opacity = '1';
+
+            const slides = bgContainer.getElementsByClassName('slide');
+            if (slides.length > 2) {
+                slides[0].style.opacity = '0';
+                setTimeout(() => slides[0].remove(), 4000);
+            }
+            currentBgIndex = (currentBgIndex + 1) % bgImages.length;
+        }
+
+        function createFirefly() {
+            const firefly = document.createElement('div');
+            firefly.classList.add('firefly');
+            firefly.style.left = Math.random() * 100 + 'vw';
+            firefly.style.animationDuration = Math.random() * 5 + 8 + 's';
+            document.body.appendChild(firefly);
+            setTimeout(() => { firefly.remove(); }, 13000);
+        }
+
+        function createFloatingElement() {
+            const isPhoto = Math.random() > 0.35;
+            const el = document.createElement('div');
+            el.classList.add('floating-element');
+
+            el.style.left = Math.random() * 85 + 5 + 'vw';
+            el.style.setProperty('--scale', Math.random() * (1.1 - 0.7) + 0.7);
+            el.style.setProperty('--rotation', (Math.random() * 30 - 15) + 'deg');
+            el.style.setProperty('--rotation-end', (Math.random() * 60 - 30) + 'deg');
+            el.style.animationDuration = Math.random() * 10 + 10 + 's';
+
+            if (isPhoto && memoryPhotos.length > 0) {
+                const photoIdx = Math.floor(Math.random() * memoryPhotos.length);
+                el.innerHTML = `
+                    <div class="floating-photo">
+                        <img src="${memoryPhotos[photoIdx]}" alt="Kỷ niệm" onerror="this.src='https://via.placeholder.com/150?text=Loi+Hinh+Anh'">
+                        <div class="photo-caption">My Love</div>
+                    </div>`;
+            } else {
+                el.innerHTML = '❤️';
+                el.style.fontSize = Math.random() * 30 + 15 + 'px';
+                el.style.color = Math.random() > 0.5 ? '#ff4b72' : '#ff9a9e';
+                el.style.filter = 'drop-shadow(0 0 8px rgba(255, 75, 114, 0.8))';
+            }
+
+            document.body.appendChild(el);
+            setTimeout(() => { el.remove(); }, 20000);
+        }
+
+        function startSurprise() {
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => { document.getElementById('start-screen').style.visibility = 'hidden'; }, 1500);
+
+            const audio = document.getElementById('bgMusic');
+            audio.volume = 0.6;
+            audio.play().catch(e => console.log("Không tìm thấy nhạc."));
+
+            changeBackground();
+            setInterval(changeBackground, 6000);
+
+            setInterval(createFirefly, 300);
+            setInterval(createFloatingElement, 1500);
+
+            const mainContent = document.getElementById('main-content');
+            mainContent.style.display = 'flex';
+
+            setTimeout(() => { document.getElementById('title').style.animation = 'fadeInDown 2.5s forwards'; }, 800);
+            setTimeout(() => { document.getElementById('line1').style.animation = 'fadeInUp 2.5s forwards'; }, 3000);
+            setTimeout(() => { document.getElementById('line2').style.animation = 'fadeInUp 2.5s forwards'; }, 6000);
+            setTimeout(() => { document.getElementById('line3').style.animation = 'fadeInUp 2.5s forwards'; }, 8000);
+            setTimeout(() => { document.getElementById('line4').style.animation = 'fadeInUp 2.5s forwards'; }, 11000);
+            setTimeout(() => { document.getElementById('line5').style.animation = 'fadeInUp 2.5s forwards'; }, 14000);
+        }
+    </script>
+</body>
+
+</html>
